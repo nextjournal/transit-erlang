@@ -64,7 +64,7 @@ emit_tagged(#tagged_value{tag=Tag, rep=Rep}, S0) ->
 emit_encoded(Tag, Rep, Env) ->
   Handler = transit_write_handlers:handler(Rep),
   RepFun = Handler#write_handler.rep,
-  emit_tagged(#tagged_value{tag=Tag, rep=RepFun(Rep)}, Env).
+  emit_tagged(#tagged_value{tag=Tag, rep=Rep}, Env).
 
 -spec emit_string(bitstring(), bitstring(), S) ->
   {bitstring(), S} when S::transit_marshaler:env().

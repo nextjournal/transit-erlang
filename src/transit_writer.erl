@@ -23,3 +23,14 @@ canonicalize(#{ format := _F, handler := _H } = M) -> M;
 canonicalize(#{ format := _F } = M) -> canonicalize(M#{ handler => ?MODULE });
 canonicalize(#{ handler := _H } = M) -> canonicalize(M#{ format => json });
 canonicalize(#{}) -> #{ format => json, handler => ?MODULE }.
+
+-ifdef(TEST).
+-include_lib("eunit/include/eunit.hrl").
+
+write_bugged_test_() ->
+    Tests = [{<<"[\"~#om/id\",\"~u565a051a-3acc-4168-bcdc-ab59438e5e86\"]">>,
+              transit_types:tv(<<"om/id">>, transit_types:uuid(<<"565a051a-3acc-4168-bcdc-ab59438e5e86">>))}
+            ],
+    [fun() -> Res = write(Rep, #{format => json})
+     end || {Res, Rep} <- Tests].
+-endif.
