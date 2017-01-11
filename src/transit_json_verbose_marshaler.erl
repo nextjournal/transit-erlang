@@ -101,6 +101,7 @@ marshals_extention_test_() ->
 marshals_tagged(Env) ->
   Tests = [{<<"{\"~#'\":[102,111,111]}">>, "foo"},
            {<<"{\"~#'\":\"foo\"}">>, <<"foo">>},
+           {<<"{\"~#'\":null}">>, nil},
            {<<"{\"~#'\":1234}">>, 1234}],
   [fun() -> {Raw, _} = emit_tagged(#tagged_value{tag=?QUOTE, rep=Rep}, Env),
             Res = jsx:encode(Raw)

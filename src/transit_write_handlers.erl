@@ -80,6 +80,8 @@ handler({kw, _}) ->
   };
 handler(undefined) ->
   #write_handler{tag = fun undefined_tag/1, rep = fun undefined_rep/1, string_rep = fun undefined_string_rep/1};
+handler(nil) ->
+  handler(undefined);
 handler(nan) -> special_number();
 handler(infinity) -> special_number();
 handler(neg_infinity) -> special_number();
