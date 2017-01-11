@@ -6,7 +6,7 @@
 %% API Function Exports
 %% ------------------------------------------------------------------
 
--export([read/2]).
+-export([read/2, decode/2]).
 
 %% ------------------------------------------------------------------
 %% API Function Definitions
@@ -15,7 +15,7 @@
 read(Obj, Config) ->
   Format = format(Config),
   Cache = transit_rolling_cache:empty(Format),
-  
+
   case unpack(Obj, Format) of
     {ok, Rep} ->
       {Val, _} = decode(Cache, Rep, value, Config),
@@ -37,6 +37,12 @@ format(#{ format := F }) -> F;
 format(#{}) -> undefined;
 format(Config) when is_list(Config) ->
     proplists:get_value(format, Config, undefined).
+
+decode(Rep, Config) ->
+  Format = format(Config),
+  Cache = transit_rolling_cache:empty(Format),
+  {Val, _} = decode(Cache, Rep, value, Config),
+  Val.
 
 decode(Cache, Str, Kind, Config) when is_binary(Str) ->
   {OrigStr, Cache1} = transit_rolling_cache:decode(Cache, Str, Kind),
