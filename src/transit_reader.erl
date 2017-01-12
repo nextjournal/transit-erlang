@@ -75,6 +75,7 @@ decode(Cache, [EscapedTag, Rep] = Name, Kind, Config) when is_binary(EscapedTag)
   end;
 decode(Cache, [{}], _Kind, _Config) -> {#{}, Cache};
 decode(Cache, Obj, Kind, Config) when is_list(Obj) -> decode_array(Cache, Obj, Kind, Config);
+decode(Cache, null, _Kind, #{ translate_fun := TR }) -> {TR(undefined), Cache};
 decode(Cache, null, _Kind, _Config) -> {undefined, Cache};
 decode(Cache, Obj, _Kind, _Config) -> {Obj, Cache}.
 
