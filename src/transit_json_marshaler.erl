@@ -14,7 +14,7 @@
 emit_null(_Rep, Env) ->
   case transit_marshaler:context(Env) of
     key ->
-      emit_string(<<?ESC/bitstring, ?NULL/bitstring>>, <<"null">>, Env);
+      emit_string(<<?ESC/bitstring, ?NULL/bitstring>>, <<"">>, Env);
     value ->
       emit_object(undefined, Env)
   end.
@@ -74,17 +74,17 @@ emit_string(<<>>, String, Env) ->
   emit_raw_string(Escaped, Env);
 emit_string(Tag, String, Env) ->
   emit_raw_string(<<Tag/binary, String/binary>>, Env).
-    
+
 emit_raw_string(Raw, Env) ->
   Cache = transit_marshaler:cache(Env),
   {Encoded, Cache1} = transit_rolling_cache:encode(Cache, Raw, transit_marshaler:context(Env)),
   emit_object(Encoded, Env#env{cache=Cache1}).
-  
+
 -spec emit_object(Rep, Env) ->
   {Resp, Env} when Rep::term(), Resp::bitstring(), Env::transit_marshaler:env().
 emit_object(Obj, S1) ->
   {emit_object_(Obj), S1}.
-  
+
 emit_object_(O) when is_binary(O); is_integer(O); is_float(O) -> O;
 emit_object_(undefined) -> null;
 emit_object_(A) when is_atom(A) -> A;
